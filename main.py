@@ -10,7 +10,7 @@ TOKEN = os.getenv('BOT_TOKEN')
 
 CHANNELS = [
     1143723280176525325,
-    1383253050776485981
+    1382438286336852048
 ]
 
 intents = discord.Intents.default()
@@ -52,9 +52,15 @@ async def on_message(message: discord.Message):
     # message.reference (replies), message.attachments
 
     for id in [id for id in CHANNELS if id != message.channel.id]:
+        embed = discord.Embed(
+            color=discord.Color.dark_teal(),
+            title="#" + message.channel.name + " | " + message.guild.name,
+            description=message.content
+        )
+        embed.set_author(name=message.author.name, icon_url=message.author.display_avatar.url)
+
         await client.get_channel(id).send(
-            content=message.content,
-            embeds=message.embeds,
+            embeds=[embed, *message.embeds],
             files=[await a.to_file(filename=a.filename, spoiler=a.is_spoiler()) for a in message.attachments],
             stickers=message.stickers
         )
